@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<style>
+    /* style.css */
+body {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: sans-serif;
+	line-height: 1.5;
+	min-height: 100vh;
+	background: #f3f3f3;
+	flex-direction: column;
+	margin: 0;
+}
+
+.main {
+	background-color: #fff;
+	border-radius: 15px;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+	padding: 10px 20px;
+	transition: transform 0.2s;
+	width: 500px;
+	text-align: center;
+}
+
+h1 {
+	color: #4CAF50;
+}
+
+label {
+	display: block;
+	width: 100%;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	text-align: left;
+	color: #555;
+	font-weight: bold;
+}
+
+#pass {
+	color: red;
+	font-size: 12px;
+}
+
+input {
+	display: block;
+	width: 100%;
+	margin-bottom: 15px;
+	padding: 10px;
+	box-sizing: border-box;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+}
+
+select {
+	display: block;
+	width: 100%;
+	margin-bottom: 15px;
+	padding: 10px;
+	box-sizing: border-box;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+}
+
+button {
+	padding: 15px;
+	border-radius: 10px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	border: none;
+	color: white;
+	cursor: pointer;
+	background-color: #4CAF50;
+	width: 100%;
+	font-size: 16px;
+}
+
+.wrap {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+</style>
+<head>
+	<title>License Key Generator</title>
+</head>
+
+<body>
+	<div class="main">
+		<h1>License Key Generator</h1>
+
+		<form action="" id="LicKeyInput">
+			<label for="software">Select Software:</label>
+            <select name="software" id="software">
+                <option value="ProMSA" selected>ProMSA</option>
+                <option value="Nautilus">Nautilus</option>
+                <option value="SPC">SPC</option>
+                <option value="Microsoft">Microsoft</option>
+            </select>
+
+			<label for="expiry">Set Expiry Date:</label>
+			<input type="date"
+				id="expiry" name="expiry"
+				placeholder="Enter Expiry Date" required>
+
+			<label for="key">License Key:</label>
+			<input type="text" id="key"
+				name="key"
+				placeholder="Copy this key once generated" readonly>
+
+			<div id="value">
+
+			</div>
+
+			<label for="lic_validity">License Validity:</label>
+			<input type="text" id="lic_validity"
+				name="lic_validity"
+				placeholder="In Number of days" readonly>
+
+			<div id="licvalue">
+
+			</div>
+
+
+			<div class="wrap">
+				<button type="submit" id="submit">Submit</button>
+			</div>
+		</form>
+		<script type="text/javascript">
+			var form = document.getElementById("LicKeyInput");
+			function handleForm(event){
+				event.preventDefault();
+			}
+			form.addEventListener('submit',test);
+			function test(event){
+				event.preventDefault();
+				var expiry = document.getElementById("expiry").value;
+				var software = document.getElementById("software").value;
+				var obj = new XMLHttpRequest();
+				obj.open("GET","http://localhost:8000/key?software="+software+"&expiry="+expiry);
+				obj.onload = function(){
+					if (obj.status == 200){
+					    var licKey = JSON.parse(obj.responseText)
+						document.getElementById("key").value = licKey.key;
+						var num_days_output = parseInt(licKey.years)+","+parseInt(licKey.months)+","+parseInt(licKey.days);
+						console.log(num_days_output);
+						if (parseInt(licKey.years)>0 && parseInt(licKey.months)>0 && parseInt(licKey.days)>0)
+						{
+							num_days_output = licKey.years
+							if (licKey.years > 1)
+							{
+								num_days_output += " year, "+licKey.months+" months,"+licKey.days+" days"
+							}
+							document.getElementById("lic_validity").value = num_days_output;
+						}
+						else if (parseInt(licKey.months)>0 && parseInt(licKey.days)>0)
+						{
+							num_days_output = licKey.months+" months,"+licKey.days+" days"
+							document.getElementById("lic_validity").value = num_days_output;
+						}
+						else if (parseInt(licKey.days)>0)
+						{
+							num_days_output = licKey.days+" days"
+							document.getElementById("lic_validity").value = num_days_output;
+						}
+					}
+					else
+					{
+						document.getElementById("key").value = "";
+						alert('Error: Code='+obj.statusText+"\nStatus="+obj.statusText)
+					}
+				}
+				obj.send();
+			}
+		</script>
+	</div>
+</body>
+</html>
