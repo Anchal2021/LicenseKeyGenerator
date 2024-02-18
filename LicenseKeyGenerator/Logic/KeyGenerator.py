@@ -23,13 +23,13 @@ class KeyGenrator():
         return Key
 
     def AddProductCode(self,product,key):
-        if product == "ProMSA":
+        if product == "Software1":
             key[3:5] = "A1"
-        elif product == "Nautilus":
+        elif product == "Software2":
             key[3:5] = "B2"
-        elif product == "SPC":
+        elif product == "Software3":
             key[3:5] = "C1"
-        elif product == "Microsoft":
+        elif product == "Software4":
             key[3:5] = "D3"
 
     def AddExpiryDate(self,key, lic_date=datetime.now()):
@@ -55,7 +55,11 @@ class KeyGenrator():
     def CheckProductCode(self,key):
         if key[3:5] == "A1":
             return True
-        if key[3:5] == "B2":
+        elif key[3:5] == "B2":
+            return True
+        elif key[3:5] = "C1":
+            return True
+        elif key[3:5] = "D3":
             return True
         return False
 
