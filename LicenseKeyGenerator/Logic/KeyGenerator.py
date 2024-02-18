@@ -57,9 +57,9 @@ class KeyGenrator():
             return True
         elif key[3:5] == "B2":
             return True
-        elif key[3:5] = "C1":
+        elif key[3:5] == "C1":
             return True
-        elif key[3:5] = "D3":
+        elif key[3:5] == "D3":
             return True
         return False
 
